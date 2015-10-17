@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS 使用私有api开发 | Nidom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="###一．基本知识
+iPhone中的API除了公开的API：Published API外（或者叫文档中记录的API：Documented API），还有两类API：私有API：Private API和未公开的API：UnPublished API(或者叫文档中未记录的API：Undocumented API)。其中私有API是指放在PrivateFrameworks框架中的API，未公开的API是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 使用私有api开发">
+<meta property="og:url" content="http://nidom.top/article/20130226/use-private-api/index.html">
+<meta property="og:site_name" content="Nidom">
+<meta property="og:description" content="###一．基本知识
+iPhone中的API除了公开的API：Published API外（或者叫文档中记录的API：Documented API），还有两类API：私有API：Private API和未公开的API：UnPublished API(或者叫文档中未记录的API：Undocumented API)。其中私有API是指放在PrivateFrameworks框架中的API，未公开的API是">
+<meta property="og:updated_time" content="2015-01-14T17:45:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 使用私有api开发">
+<meta name="twitter:description" content="###一．基本知识
+iPhone中的API除了公开的API：Published API外（或者叫文档中记录的API：Documented API），还有两类API：私有API：Private API和未公开的API：UnPublished API(或者叫文档中未记录的API：Undocumented API)。其中私有API是指放在PrivateFrameworks框架中的API，未公开的API是">
+  
+    <link rel="alternative" href="/atom.xml" title="Nidom" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Nidom</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/iOS开发/" style="font-size: 10px;">iOS开发</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Nidom</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Nidom</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-use-private-api" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/article/20130226/use-private-api/" class="article-date">
+  	<time datetime="2013-02-26T15:35:24.000Z" itemprop="datePublished">2013-02-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS 使用私有api开发
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###一．基本知识</p>
+<p>iPhone中的API除了公开的API：Published API外（或者叫文档中记录的API：Documented API），还有两类API：私有API：Private API和未公开的API：UnPublished API(或者叫文档中未记录的API：Undocumented API)。其中私有API是指放在PrivateFrameworks框架中的API，未公开的API是指虽然放在Frameworks框架中，但是却没有在苹果的官方文档中有使用说明、代码介绍等记录的API。后两种API是有区别的，按苹果的说法，未公开的API是还不够成熟，可能还会变动的API，等完全成型了后会变成公开的API，但是目前不对其提供承诺，就是系统版本升级后可能会失效。而私有API是苹果明确不能使用的API。虽然两者有所区别，但是在具体使用方法上是类似的。</p>
+<a id="more"></a>
+<p>###二．具体介绍</p>
+<p>#####1.导出生成私有API的头文件声明</p>
+<p>使用私有或未公开的API，首先需要导出其对应的头文件，在头文件里有相关函数的声明。</p>
+<p>工具：</p>
+<p>class-dump</p>
+<p>class-dump可以从编译后的Objective-C的二进制文件中提取对应的数据结构及函数等声明。</p>
+<p>使用方法：</p>
+<p>为了能在任意目录下使用class-dump命令，首先建议把class-dump文件拷贝到/user/local/bin/目录下，然后就可以在任意目录下执行以下命令：</p>
+<p>class-dump /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.0.sdk</p>
+<p>/System/Library/Frameworks/UIKit.framework/ &gt;UIKit.h</p>
+<p>以上命令就可以把iPhoneSimulator3.0.Sdk中Frameworks框架里的UIKit.Framework框架的数据结构及函数声明等给提取出来，并且放在UIKit.h这个文件中，之后你就可以在这个头文件中找你需要API的声明及其使用方式。以同样的方法，就可以挨个导出你需要那个框架中的API声明。</p>
+<p>也可以用ericasadun写的DumpFrameworks.pl（文件中有部分注释说明）这个文件把私有框架下的API头文件全部提取出来。使用方法也是首先把class-dump文件拷贝到/user/local/bin/目录下，然后在任意一个目录下执行./DumpFrameworks.pl,然后就会在你的家目录下产生一个Headers文件夹，里面罗列了私有框架下的API头文件。</p>
+<p>#####2.使用私有API</p>
+<p>导出了私有API的头文件声明后，使用方法就比较简单了，首先在你的工程中包含进头文件，然后导入对应的框架，之后就可以类似提供了静态库的方式在我们的代码中使用这些私有API函数。</p>
+<p>###三．附加说明</p>
+<p>iPhone编程中一些非常精致好玩的API都包含在私有API或未公开的API中，虽然我们可以以这种方式使用这些非常好的API，但是这样做是存在一定风险的，首先为公开的API有变更的可能，这样在每个固件版本中，你的代码都有可能中断。同时，最大的问题是使用了私有API的程序是不能放在App Store上销售的。因此如果我们只是为了好玩体验iPhone中这些精彩的API，那没关系。如果是为了做出程序放在App Store上销售的，那就不要动私有API的主意了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/article/20130301/ios-event-handle/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          iOS程序之事件处理流程(转)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/article/20121227/objective-c-runtime/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Objective-C Runtime Tricks</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="use-private-api" data-title="iOS 使用私有api开发" data-url="http://nidom.top/article/20130226/use-private-api/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ibloger"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Nidom
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: undefined,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: undefined
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

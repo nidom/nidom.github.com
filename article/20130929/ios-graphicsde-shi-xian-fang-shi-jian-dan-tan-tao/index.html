@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS Graphics的实现方式简单探讨 | Nidom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在学习Open GL ES，作者总喜欢里面的一些特性和quartz进行对比，于是我开始怀疑对一些知识理解的正确性。
+首先ios绘图依靠Quartz, Core Animation, UIKit和open GL ，以前一直认为Quartz和Core Animation的底层都是依靠Open GL来进行渲染，看来我大错特错了。我想很多人对这些框架的底层实现方式不是很了解或者概念比较模糊，查阅了大量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Graphics的实现方式简单探讨">
+<meta property="og:url" content="http://nidom.top/article/20130929/ios-graphicsde-shi-xian-fang-shi-jian-dan-tan-tao/index.html">
+<meta property="og:site_name" content="Nidom">
+<meta property="og:description" content="最近在学习Open GL ES，作者总喜欢里面的一些特性和quartz进行对比，于是我开始怀疑对一些知识理解的正确性。
+首先ios绘图依靠Quartz, Core Animation, UIKit和open GL ，以前一直认为Quartz和Core Animation的底层都是依靠Open GL来进行渲染，看来我大错特错了。我想很多人对这些框架的底层实现方式不是很了解或者概念比较模糊，查阅了大量">
+<meta property="og:image" content="http://nidom.top/images/blog/2013092901.png">
+<meta property="og:image" content="http://nidom.top/images/blog/2013092902.jpg">
+<meta property="og:image" content="http://nidom.top/images/blog/2013092903.jpg">
+<meta property="og:image" content="http://nidom.top/images/blog/2013092904.png">
+<meta property="og:updated_time" content="2015-05-27T05:33:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Graphics的实现方式简单探讨">
+<meta name="twitter:description" content="最近在学习Open GL ES，作者总喜欢里面的一些特性和quartz进行对比，于是我开始怀疑对一些知识理解的正确性。
+首先ios绘图依靠Quartz, Core Animation, UIKit和open GL ，以前一直认为Quartz和Core Animation的底层都是依靠Open GL来进行渲染，看来我大错特错了。我想很多人对这些框架的底层实现方式不是很了解或者概念比较模糊，查阅了大量">
+  
+    <link rel="alternative" href="/atom.xml" title="Nidom" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Nidom</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/iOS开发/" style="font-size: 10px;">iOS开发</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Nidom</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Nidom</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ios-graphicsde-shi-xian-fang-shi-jian-dan-tan-tao" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/article/20130929/ios-graphicsde-shi-xian-fang-shi-jian-dan-tan-tao/" class="article-date">
+  	<time datetime="2013-09-29T11:18:26.000Z" itemprop="datePublished">2013-09-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS Graphics的实现方式简单探讨
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS开发/">iOS开发</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在学习Open GL ES，作者总喜欢里面的一些特性和quartz进行对比，于是我开始怀疑对一些知识理解的正确性。</p>
+<p>首先ios绘图依靠Quartz, Core Animation, UIKit和open GL ，以前一直认为Quartz和Core Animation的底层都是依靠Open GL来进行渲染，看来我大错特错了。我想很多人对这些框架的底层实现方式不是很了解或者概念比较模糊，查阅了大量资料说法也不一，通过和小伙伴@answer-huang 和 @xdream86  的探讨，得出一个相对明细的结论，下面慢慢道来。<br><a id="more"></a></p>
+<img src="/images/blog/2013092901.png">  
+<p>上面的图是objc.io的一篇文章配图,（原文翻译链接），这张图很充分的说明了CoreGraphcis(下文用CG代替)和Core Animation（下文用CA代替）都是依靠Open GL来基于GPU驱动层进行渲染，真的是完全这样吗?</p>
+<p>下图是苹果官方文档对于CA解释的层次图</p>
+<img src="/images/blog/2013092902.jpg">  
+<p>可以看出 CA 的实现是基于Open GL和CG ，通过查看CA的头文件也证明了这一点，其中CATransform3D依靠的是opengl进行3D渲染，而其他2D动画通过CG进行渲染。接下来看，CG的下层直接是Graphics硬件层，这也证明了CG并不完全依靠openGL渲染（下文会介绍为什么是不完全）。</p>
+<p>ios开发者对于CG不会陌生，许多人也称他为quartz，这是不准确的。Quartz 2D 作为苹果的为cocoa框架制作的绘图引擎，只是CG框架的一部分（其实是大部分），也就是CG的子集。所以CG的图形渲染除了依靠quartz之外其实还小部分依靠于Open GL。现在我们可以说objc.io给的层次配图不完全准确，因为CG不完全是依赖于Open GL.</p>
+<p>下图是苹果官方文档对于QuickTime解释的层次图</p>
+<img src="/images/blog/2013092903.jpg">  
+<p>看了 QuickTime 的层次图 ，发现 CG ，Core Image 和Core Video 也是依赖 Open GL的 ，当时并不是完全依赖（证实了CG部分使用Open GL渲染）。查Ccore Video的文档就会发现大部分关于open GL 的内容，视屏内容用Open GL 来渲染这也合情合理，CG和Core Image 应该只是用来呈现视屏中静态图像内容。</p>
+<p>来说说UIKit，国内很多博客说UIkit是对quartz的封装，现在你可能已经知道这个说法太片面了。实际上UIKit构建于CA之上,因为CA构建于CG和于Open GL之上，所以UIkit直接可以和CG进行交互，当然也可以直接和Open GL进行交互。可以认为UIKit是苹果为了构建UI而对ios中其它绘图api的封装，也可以完成简单的用户UI定制操作，当然复杂的UI或者动画需要自己用CA,CG甚至Open GL去实现。</p>
+<p>当初面试的时候面试官问做没做过quartz， 我愣了半天说绘图？他说不对，最后原来是coreText…毕竟CT也借助CG，姑且算他是广义上的quartz 吧^_^..     这些都是查资料得出的结论，但也有资料相违背，大家有异议的可以 @Nidom</p>
+<p>最后献上我所理解的层次图</p>
+<img src="/images/blog/2013092904.png">  
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/article/20140218/new-start/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          搬家,新开始
+        
+      </div>
+    </a>
+  
+  
+    <a href="/article/20130927/magicalmapping-iosdui-xiang-ying-she/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MagicalMaping—iOS对象映射</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="ios-graphicsde-shi-xian-fang-shi-jian-dan-tan-tao" data-title="iOS Graphics的实现方式简单探讨" data-url="http://nidom.top/article/20130929/ios-graphicsde-shi-xian-fang-shi-jian-dan-tan-tao/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ibloger"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Nidom
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: undefined,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: undefined
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS程序之事件处理流程(转) | Nidom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="因为交互的要求，跑在ipad上的程序必须以横版且仅以横版的模式运行。按说这应该是比较简单的事情：在plist或者工程设置中设一下程序起始方向和所支持的方向(Landscape)，同时再在对应的ViewController中处理一下shouldAutorotateToInterfaceOrientation函数即可。但是却出了如下的问题：
+在UIWindow中添加了两个ViewController，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS程序之事件处理流程(转)">
+<meta property="og:url" content="http://nidom.top/article/20130301/ios-event-handle/index.html">
+<meta property="og:site_name" content="Nidom">
+<meta property="og:description" content="因为交互的要求，跑在ipad上的程序必须以横版且仅以横版的模式运行。按说这应该是比较简单的事情：在plist或者工程设置中设一下程序起始方向和所支持的方向(Landscape)，同时再在对应的ViewController中处理一下shouldAutorotateToInterfaceOrientation函数即可。但是却出了如下的问题：
+在UIWindow中添加了两个ViewController，">
+<meta property="og:image" content="http://nidom.top/images/blog/2013030101.jpg">
+<meta property="og:updated_time" content="2015-05-27T05:33:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS程序之事件处理流程(转)">
+<meta name="twitter:description" content="因为交互的要求，跑在ipad上的程序必须以横版且仅以横版的模式运行。按说这应该是比较简单的事情：在plist或者工程设置中设一下程序起始方向和所支持的方向(Landscape)，同时再在对应的ViewController中处理一下shouldAutorotateToInterfaceOrientation函数即可。但是却出了如下的问题：
+在UIWindow中添加了两个ViewController，">
+  
+    <link rel="alternative" href="/atom.xml" title="Nidom" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Nidom</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/iOS开发/" style="font-size: 10px;">iOS开发</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Nidom</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Nidom</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ios-event-handle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/article/20130301/ios-event-handle/" class="article-date">
+  	<time datetime="2013-03-01T06:59:19.000Z" itemprop="datePublished">2013-03-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS程序之事件处理流程(转)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS开发/">iOS开发</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>因为交互的要求，跑在ipad上的程序必须以横版且仅以横版的模式运行。按说这应该是比较简单的事情：在plist或者工程设置中设一下程序起始方向和所支持的方向(Landscape)，同时再在对应的ViewController中处理一下shouldAutorotateToInterfaceOrientation函数即可。但是却出了如下的问题：</p>
+<p>在UIWindow中添加了两个ViewController，并显示后一个ViewController的视图，结果视图并没有被旋转成横版，仍旧按照竖版来显示。Google和StackOverFlow了一把，发现很多人都碰到过类似的问题，比如这个和这个。当然也有人给出了解决方案：给UIWindow设置一个rootViewController，尔后添加的所有ViewController都以rootViewController的subview形式添加。就连苹果官方的的Q&amp;A也推荐这种做法： 《Why won’t my UIViewController rotate with the device?》至于原因，官方的Q&amp;A讲的很简单：如果往一个UIWindow里面添加了两个以上的view，那么后面添加的view就会收不到旋转的事件，于是无法正常调整视图的方向 —– 只有第一个加入到UIWindow的view才会进行旋转。</p>
+<a id="more"></a>
+<p>按说问题到这里就解决了，将后面的view以rootViewController的subview形式进行添加就可以了。但是Why？为什么第一个添加的ViewController这么特殊，它可以收到旋转消息而后面的都不会呢。在苹果官方文档搜了一遍，终于在事件处理流程的文档中找到了原因。(吐槽下：苹果的文档比MSDN要详尽多了，各种细节都包含在内，同样是封闭系统，差距怎么这么大呢…)</p>
+<img src="/images/blog/2013030101.jpg">  
+<p>#####事件类型</p>
+<p>在iOS系统中，一共有三种形式的事件：触摸事件(Touch Event)，运动事件(Motion Event)和远端控制事件(Remote-control Event)。顾名思义，触摸事件就是当用户触摸屏幕时发生的事件，而运动事件是用户移动设备时发生的事件：加速计，重力感应。远端控制事件可能比较陌生：如通过耳机进行控制iOS设备声音等都属于远端控制事件—-下面不展开说，因为和主题无关，详细的内容可以参考： 《Remote Control of Multimedia》 。</p>
+<p>#####事件分发</p>
+<p>在iOS系统中有个很重要的概念：Responder。基本上所有的UI相关的控件，view和viewcontroller都是继承自UIResponder。事件的分发正是通过由控件树所构成的responder chain(响应链)所进行的。一个典型的iOS响应链如下：</p>
+<p>当用户发起一个事件，比如触摸屏幕或者晃动设备，系统产生一个事件，同时投递给UIApplication，而UIApplication则将这个事件传递给特定的UIWindow进行处理(正常情况都一个程序都只有一个UIWindow)，然后由UIWindow将这个事件传递给特定的对象(即first responder)并通过响应链进行处理。虽然都是通过响应链对事件进行处理，但是触摸事件和运动事件在处理上有着明显的不同(主要体现在确定哪个对象才是他们的first responder)：</p>
+<p>触摸事件是通过HitTest来确定first responder(整个过程和Windows中对消息的处理基本是一样的)：当一个事件发生时，UIWindow将这个事件传递给当前可见的最顶端的view进行hitTest，并在这个hitTest里面进行递归查找，直到找到能够响应hitTest的最底层的那个Responder，确定为first responder。然后从这个responder开始进行处理这个事件，如果不能处理，则往上冒泡直到有一个Responder可以对这个事件进行处理为止。但是运动事件却不太一样，它并不用进行HitTest，而是直接以响应链中被指定为first responder的对象为起点，通过响应链进行事件的分发和处理。第一个加入到UIWindow中的ViewController即是运动事件的first responder。这也就解释了为啥后加入的view不会被正常的旋转：虽然都是通过first responder开始分发事件，但是一个有进行hittest，一个没有，虽然大多数情况下hittest view和first responder是同一个view，但也不绝对。正如旋转的这个例子一样。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/article/20130620/uitableviewxing-neng-you-hua/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          UITableView性能优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/article/20130226/use-private-api/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS 使用私有api开发</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="ios-event-handle" data-title="iOS程序之事件处理流程(转)" data-url="http://nidom.top/article/20130301/ios-event-handle/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ibloger"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Nidom
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: undefined,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: undefined
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

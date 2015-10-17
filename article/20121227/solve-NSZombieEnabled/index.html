@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>解决EXC_BAD_ACCESS错误的一种方法–NSZombieEnabled | Nidom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我们做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。
+比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如releas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决EXC_BAD_ACCESS错误的一种方法–NSZombieEnabled">
+<meta property="og:url" content="http://nidom.top/article/20121227/solve-NSZombieEnabled/index.html">
+<meta property="og:site_name" content="Nidom">
+<meta property="og:description" content="我们做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。
+比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如releas">
+<meta property="og:image" content="http://nidom.top/images/blog/2012122701.png">
+<meta property="og:updated_time" content="2015-05-27T05:33:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决EXC_BAD_ACCESS错误的一种方法–NSZombieEnabled">
+<meta name="twitter:description" content="我们做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。
+比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如releas">
+  
+    <link rel="alternative" href="/atom.xml" title="Nidom" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Nidom</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/iOS开发/" style="font-size: 10px;">iOS开发</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Nidom</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7u2sco.com1.z0.glb.clouddn.com/avater.jpeg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Nidom</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/nidom" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/7048089/" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-solve-NSZombieEnabled" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/article/20121227/solve-NSZombieEnabled/" class="article-date">
+  	<time datetime="2012-12-27T06:08:30.000Z" itemprop="datePublished">2012-12-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      解决EXC_BAD_ACCESS错误的一种方法–NSZombieEnabled
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS开发/">iOS开发</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我们做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。</p>
+<p>比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如release 的对象再 release，release 那些autorelease 的对象等也会报这样的错。默认设置下 Xcode 不会给你定位具体是哪一行代码，不该去使用已释放的对象，或者release 用错了。比如 UIViewController 子类中这样的代码：</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> NSMutableArray*<span class="built_in">array</span>;  </span><br><span class="line">-(<span class="keyword">void</span>)viewDidLoad  &#123;  </span><br><span class="line">[superviewDidLoad]; </span><br><span class="line"> <span class="built_in">array</span>= [[NSMutableArray alloc]initWithCapacity:<span class="number">5</span>]; </span><br><span class="line"> [<span class="built_in">array</span> release];<span class="comment">//释放掉该数组 </span></span><br><span class="line">  &#125;  </span><br><span class="line"> - (<span class="keyword">void</span>)viewWillAppear:(BOOL)animated&#123;  </span><br><span class="line"> [<span class="built_in">array</span> addObject:@<span class="string">"Hello"</span>];<span class="comment">//使用释放掉的数组 </span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码就会出现EXC_BAD_ACCESS 错误，但我执行时 Xcode 一出错却是定位在我在 AppDelegate 的application:didFinishLaunchingWithOptions: 方法上的某行了，如果代码量多了，要查找具体问题非常难，但凭经验了。不过NSZombieEnabled 环境变量可以帮我们的忙，就是当设置NSZombieEnabled环境变量后，一个对象销毁时会被转化为_NSZombie，设置NSZombieEnabled后，当你向一个已经释放的对象发送消息，这个对象就不会向之前那样Crash或者产生一个难以理解的行为，而是放出一个错误消息，然后以一种可预测的可以产生debug断点的方式消失， 因此我们就可以找到具体或者大概是哪个对象被错误的释放了。 </p>
+<p>对 Xcode 设置了NSZombieEnabled 之后，Xcode 会明确定位在行[array addObject:@”Hello”]，然后控制台下报的错误信息是：</p>
+<p><em>*</em> -[__NSArray addObject:]:message sent to deallocated instance 0×6557370</p>
+<p>如何设置 NSZombieEnabled 呢，在 Xcode3 和 Xcode4 下设置不一样，Xcode4 下设置很简单。</p>
+<p>#####code4 下设置 NSZombieEnabled 的方法：</p>
+<p>你可以点击 Xcode4 菜单 Product -&gt; Edit Scheme-&gt; Arguments, 然后将点击”加号”, 将 NSZombieEnabled 参数加到Environment Variables 窗口中, 后面的数值写上 ”YES”.</p>
+<p>或者在 Xcode4 菜单 Product -&gt; EditScheme -&gt; Diagnostics 设置窗口中直接勾上Enable ZombieObjects 即可，Xcode 可用 cmd＋shift＋&lt; 进到这个窗口。</p>
+<img src="/images/blog/2012122701.png">  
+<p>code4 已经考虑到了现在的要求，所以提供了更便捷的设置的方式，你也可以在这个窗口中设置其他一些参数，你肯定能由此获得更多的帮助信息。</p>
+<p>CocoaDev，个人觉得讲Cocoa技术十分专业的网站之一，下面的链接详细讲了讲NSZombieEnable的原理。<a href="http://www.cocoadev.com/index.pl?NSZombieEnabled" target="_blank" rel="external">http://www.cocoadev.com/index.pl?NSZombieEnabled</a></p>
+<p>苹果官方的Mac OS X Debugging Magic,详细讲述了最为一个高级苹果程序员应该具备的调试技巧 <a href="http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html" target="_blank" rel="external">http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html</a></p>
+<p>其实还可以在Instruments中开启NSZombie选项，这样就可以在Instruments中直接查看crash时候的callstack了：<a href="http://www.markj.net/iphone-memory-debug-nszombie/" target="_blank" rel="external">http://www.markj.net/iphone-memory-debug-nszombie/</a></p>
+<p>最后提醒NSZombieEnabled只能在调试的时候使用，千万不要忘记在产品发布的时候去掉，因为NSZombieEnabled不会真正去释放dealloc对象的内存，一直开启后果可想而知.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/article/20121227/objective-c-runtime/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Objective-C Runtime Tricks
+        
+      </div>
+    </a>
+  
+  
+    <a href="/article/20120721/beginning/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">开始</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="solve-NSZombieEnabled" data-title="解决EXC_BAD_ACCESS错误的一种方法–NSZombieEnabled" data-url="http://nidom.top/article/20121227/solve-NSZombieEnabled/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ibloger"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Nidom
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: undefined,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: undefined
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
